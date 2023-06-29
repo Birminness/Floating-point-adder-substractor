@@ -1,0 +1,105 @@
+// Copyright (C) 1991-2013 Altera Corporation
+// Your use of Altera Corporation's design tools, logic functions 
+// and other software and tools, and its AMPP partner logic 
+// functions, and any output files from any of the foregoing 
+// (including device programming or simulation files), and any 
+// associated documentation or information are expressly subject 
+// to the terms and conditions of the Altera Program License 
+// Subscription Agreement, Altera MegaCore Function License 
+// Agreement, or other applicable license agreement, including, 
+// without limitation, that your use is for the sole purpose of 
+// programming logic devices manufactured by Altera and sold by 
+// Altera or its authorized distributors.  Please refer to the 
+// applicable agreement for further details.
+
+// *****************************************************************************
+// This file contains a Verilog test bench template that is freely editable to  
+// suit user's needs .Comments are provided in each section to help the user    
+// fill out necessary details.                                                  
+// *****************************************************************************
+// Generated on "06/29/2023 07:08:48"
+                                                                                
+// Verilog Test Bench template for design : FPAdd
+// 
+// Simulation tool : ModelSim-Altera (Verilog)
+// 
+
+`timescale 1 us/ 1 us
+module FPAdd_vlg_tst();
+// constants                                           
+// general purpose registers
+reg eachvec;
+// test vector input registers
+reg clk;
+reg n_reset;
+reg clk_en;
+reg [31:0] term1;
+reg [31:0] term2;
+// wires                                               
+wire [31:0]  sum;
+reg [31:0] counter;
+wire overflow, mant_added;
+// assign statements (if any)                          
+FPAdd i1 (
+// port map - connection between master ports and signals/registers   
+	.clk(clk),
+	.n_reset(n_reset),
+	.sum(sum),
+	.term1(term1),
+	.term2(term2),
+	.overflow1(overflow),
+	.mant_added1(mant_added),
+	.clk_en(clk_en)
+);
+initial                                                
+begin                                                  
+// code that executes only once                        
+// insert code here --> begin                          
+n_reset = 1'b0;
+clk = 1'b0;
+term1 = 32'b0;
+term2 = 32'b0;
+clk_en = 1'b0;
+#20 n_reset = 1'b1;
+
+forever begin
+	#10 clk = ~clk;
+	end 
+// --> end                                             
+$display("Running testbench");                       
+end                                                    
+always @(posedge clk or negedge n_reset)                                      
+// optional sensitivity list                           
+// @(event1 or event2 or .... eventn)                  
+begin                                                  
+// code executes for every event on sensitivity list   
+// insert code here --> begin        
+		if(!n_reset) begin
+		counter <= 32'b0;
+		clk_en <= 1'b0;
+		end
+		else
+		begin
+       counter <= counter + 1;
+		 if(counter == 30) begin
+			term1 <= {8'b010000001, 23'b00110000000000000000000};
+			term2 <= {8'b010000010, 23'b01000000000000000000000};
+		 end
+		 else if(counter == 60) begin
+			term1 <= {8'b010000001, 23'b10110000000000000000000};
+			term2 <= {8'b010000010, 23'b11000000000000000000000};
+		end
+		 else if(counter == 90) begin
+			term1 <= {32'b11000000100110000000000000000000};
+			term2 <= {32'b01000001001000000000000000000000};
+		 end
+		 
+		 if((counter == 31) || (counter == 61) ||(counter == 91))
+						clk_en <= 1'b1;
+		else 		 if((counter == 32) || (counter == 62) ||(counter == 92))
+						clk_en <= 1'b0;
+		end		 
+// --> end                                             
+end                                                    
+endmodule
+
