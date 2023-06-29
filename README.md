@@ -1,1 +1,1 @@
-2 cycles floating point adder and substractor
+2 cycles floating point adder and substractor with clock enable
